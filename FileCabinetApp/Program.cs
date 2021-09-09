@@ -120,8 +120,7 @@ namespace FileCabinetApp
             Console.Write("Last name: ");
             string lastName = Console.ReadLine();
             Console.Write("Date of birth: ");
-            DateTime dateOfBirth;
-            var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
+            var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
             while (!parsed)
             {
                 Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
@@ -129,7 +128,41 @@ namespace FileCabinetApp
                 parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
             }
 
-            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+            Console.Write("Work experience: ");
+            parsed = short.TryParse(Console.ReadLine(), out short workExperience);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid work experience input type, try short type");
+                Console.Write("Work experience: ");
+                parsed = short.TryParse(Console.ReadLine(), out workExperience);
+            }
+
+            while (workExperience > 100)
+            {
+                Console.WriteLine("Invalid work experience input type, try short type");
+                Console.Write("Work experience: ");
+                _ = short.TryParse(Console.ReadLine(), out workExperience);
+            }
+
+            Console.Write("Weight: ");
+            parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid weight input type, try decimal type");
+                Console.Write("Weight: ");
+                parsed = decimal.TryParse(Console.ReadLine(), out weight);
+            }
+
+            Console.Write("Lucky symbol: ");
+            parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid lucky symbol input, try to write one symbol");
+                Console.Write("Lucky symbol: ");
+                parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
+            }
+
+            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
             Console.WriteLine($"Record #{id} is created");
         }
 
@@ -145,7 +178,7 @@ namespace FileCabinetApp
             {
                 for (int i = 0; i < list.Length; i++)
                 {
-                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}");
+                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
         }

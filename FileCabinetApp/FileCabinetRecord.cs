@@ -11,5 +11,11 @@ namespace FileCabinetApp
         public string LastName { get; set; }
 
         public DateTime DateOfBirth { get; set; }
+
+        public short WorkExperience { get; set; }
+
+        public decimal Weight { get; set; }
+
+        public char LuckySymbol { get; set; }
     }
 }
