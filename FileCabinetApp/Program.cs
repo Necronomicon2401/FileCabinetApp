@@ -16,12 +16,14 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
+            new Tuple<string, Action<string>>("stat", Stat),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
+            new string[] { "stat", "shows the number of records that the service stores", "The 'stat' command shows the number of records that the service stores." },
         };
 
         public static void Main(string[] args)
@@ -95,6 +97,13 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+        }
+
+        private static void Stat(string parameters)
+        {
+            FileCabinetService service = new FileCabinetService();
+            var recordsCount = service.GetStat();
+            Console.WriteLine($"{recordsCount} record(s).");
         }
     }
 }
