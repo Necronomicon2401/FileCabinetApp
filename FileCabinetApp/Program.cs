@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -20,6 +21,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("exit", Exit),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("list", List),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -28,6 +30,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "shows the number of records that the service stores", "The 'stat' command shows the number of records that the service stores." },
             new string[] { "create", "create new record", "The 'create' command create new record." },
+            new string[] { "list", "shows list of records", "The 'list' command shows list of records." },
         };
 
         public static void Main(string[] args)
@@ -117,9 +120,34 @@ namespace FileCabinetApp
             Console.Write("Last name: ");
             string lastName = Console.ReadLine();
             Console.Write("Date of birth: ");
-            DateTime dateOfBirth = DateTime.ParseExact(Console.ReadLine(), pattern, null);
+            DateTime dateOfBirth;
+            var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
+                Console.Write("Date of birth: ");
+                parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
+            }
+
             int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
             Console.WriteLine($"Record #{id} is created");
+        }
+
+        private static void List(string parameters)
+        {
+            var list = fileCabinetService.GetRecords();
+            CultureInfo ci = new CultureInfo("en-US");
+            if (list.Length == 0)
+            {
+                Console.WriteLine("List of records is empty, please use 'create' command to add record");
+            }
+            else
+            {
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}");
+                }
+            }
         }
     }
 }
