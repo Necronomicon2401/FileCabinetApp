@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -10,18 +11,26 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
+        private static FileCabinetService fileCabinetService = new ();
+
         private static bool isRunning = true;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
+            new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("list", List),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
+            new string[] { "stat", "shows the number of records that the service stores", "The 'stat' command shows the number of records that the service stores." },
+            new string[] { "create", "create new record", "The 'create' command create new record." },
+            new string[] { "list", "shows list of records", "The 'list' command shows list of records." },
         };
 
         public static void Main(string[] args)
@@ -95,6 +104,83 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+        }
+
+        private static void Stat(string parameters)
+        {
+            var recordsCount = Program.fileCabinetService.GetStat();
+            Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create(string parameters)
+        {
+            string pattern = "MM/dd/yyyy";
+            Console.Write("First name: ");
+            string firstName = Console.ReadLine();
+            Console.Write("Last name: ");
+            string lastName = Console.ReadLine();
+            Console.Write("Date of birth: ");
+            var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
+                Console.Write("Date of birth: ");
+                parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
+            }
+
+            Console.Write("Work experience: ");
+            parsed = short.TryParse(Console.ReadLine(), out short workExperience);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid work experience input type, try short type");
+                Console.Write("Work experience: ");
+                parsed = short.TryParse(Console.ReadLine(), out workExperience);
+            }
+
+            while (workExperience > 100)
+            {
+                Console.WriteLine("Invalid work experience input type, try short type");
+                Console.Write("Work experience: ");
+                _ = short.TryParse(Console.ReadLine(), out workExperience);
+            }
+
+            Console.Write("Weight: ");
+            parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid weight input type, try decimal type");
+                Console.Write("Weight: ");
+                parsed = decimal.TryParse(Console.ReadLine(), out weight);
+            }
+
+            Console.Write("Lucky symbol: ");
+            parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
+            while (!parsed)
+            {
+                Console.WriteLine("Invalid lucky symbol input, try to write one symbol");
+                Console.Write("Lucky symbol: ");
+                parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
+            }
+
+            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
+            Console.WriteLine($"Record #{id} is created");
+        }
+
+        private static void List(string parameters)
+        {
+            var list = fileCabinetService.GetRecords();
+            CultureInfo ci = new CultureInfo("en-US");
+            if (list.Length == 0)
+            {
+                Console.WriteLine("List of records is empty, please use 'create' command to add record");
+            }
+            else
+            {
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                }
+            }
         }
     }
 }
