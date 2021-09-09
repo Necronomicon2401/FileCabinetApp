@@ -10,6 +10,8 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
+        private static FileCabinetService fileCabinetService = new ();
+
         private static bool isRunning = true;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
@@ -17,6 +19,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
             new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("create", Create),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -24,6 +27,7 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "shows the number of records that the service stores", "The 'stat' command shows the number of records that the service stores." },
+            new string[] { "create", "create new record", "The 'create' command create new record." },
         };
 
         public static void Main(string[] args)
@@ -101,9 +105,21 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            FileCabinetService service = new FileCabinetService();
-            var recordsCount = service.GetStat();
+            var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create(string parameters)
+        {
+            string pattern = "MM/dd/yyyy";
+            Console.Write("First name: ");
+            string firstName = Console.ReadLine();
+            Console.Write("Last name: ");
+            string lastName = Console.ReadLine();
+            Console.Write("Date of birth: ");
+            DateTime dateOfBirth = DateTime.ParseExact(Console.ReadLine(), pattern, null);
+            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+            Console.WriteLine($"Record #{id} is created");
         }
     }
 }
