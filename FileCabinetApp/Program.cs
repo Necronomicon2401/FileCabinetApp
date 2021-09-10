@@ -23,6 +23,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -32,7 +33,8 @@ namespace FileCabinetApp
             new string[] { "stat", "shows the number of records that the service stores", "The 'stat' command shows the number of records that the service stores." },
             new string[] { "create", "create new record", "The 'create' command create new record." },
             new string[] { "list", "shows list of records", "The 'list' command shows list of records." },
-            new string[] { "edit", "edit created record by id", "The 'edit' command allow to edit created record by id" },
+            new string[] { "edit", "edit created record by id", "The 'edit' command allow to edit created record by id." },
+            new string[] { "find", "find and shows created records by inputed property", "The 'find' command find and shows created records by inputed property." },
         };
 
         public static void Main(string[] args)
@@ -238,17 +240,65 @@ namespace FileCabinetApp
                     catch (ArgumentNullException ex)
                     {
                         Console.WriteLine(ex.Message);
-                        Create(parameters);
+                        Edit(parameters);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        Create(parameters);
+                        Edit(parameters);
                     }
                 }
             }
 
             Console.WriteLine($"#{id} record is not found");
+        }
+
+        private static void Find(string parameters)
+        {
+            CultureInfo ci = new CultureInfo("en-US");
+            var inputs = parameters.Split(' ', 2);
+            if (inputs.Length != 2)
+            {
+                Console.WriteLine("Please input property of search and text for search like \" find firstname \"Ivan\" \" ");
+                return;
+            }
+
+            string property = inputs[0];
+            string text = inputs[1].Replace("\"", string.Empty);
+            if (property.ToLower().Equals("firstname"))
+            {
+                var list = fileCabinetService.FindByFirstName(text);
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                }
+            }
+
+            if (property.ToLower().Equals("lastname"))
+            {
+                var list = fileCabinetService.FindByLastName(text);
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                }
+            }
+
+            if (property.ToLower().Equals("dateofbirth"))
+            {
+                string pattern = "yyyy-MMM-dd";
+                var parsed = DateTime.TryParseExact(text, pattern, ci, 0, out DateTime dateOfBirth);
+                if (!parsed)
+                {
+                    Console.WriteLine("Invalid date type, please, use yyyy-MMM-dd (2001-Dec-01) pattern");
+                    return;
+                }
+
+                var list = fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                }
+            }
         }
 
         private static void List(string parameters)
@@ -263,7 +313,7 @@ namespace FileCabinetApp
             {
                 for (int i = 0; i < list.Length; i++)
                 {
-                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
         }

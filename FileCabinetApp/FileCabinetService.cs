@@ -6,6 +6,9 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short workExperience, decimal weight, char luckySymbol)
         {
@@ -62,6 +65,39 @@ namespace FileCabinetApp
 
             this.list.Add(record);
 
+            if (this.firstNameDictionary.ContainsKey(firstName))
+            {
+                this.firstNameDictionary[firstName].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.firstNameDictionary.Add(firstName, list);
+            }
+
+            if (this.lastNameDictionary.ContainsKey(lastName))
+            {
+                this.lastNameDictionary[lastName].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.lastNameDictionary.Add(lastName, list);
+            }
+
+            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            {
+                this.dateOfBirthDictionary[dateOfBirth].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.dateOfBirthDictionary.Add(dateOfBirth, list);
+            }
+
             return record.Id;
         }
 
@@ -111,17 +147,73 @@ namespace FileCabinetApp
             {
                 if (this.list[i].Id == id)
                 {
-                    this.list[i].FirstName = firstName;
-                    this.list[i].LastName = lastName;
-                    this.list[i].DateOfBirth = dateOfBirth;
-                    this.list[i].WorkExperience = workExperience;
-                    this.list[i].Weight = weight;
-                    this.list[i].LuckySymbol = luckySymbol;
+                    var record = new FileCabinetRecord
+                    {
+                        Id = id,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        DateOfBirth = dateOfBirth,
+                        WorkExperience = workExperience,
+                        Weight = weight,
+                        LuckySymbol = luckySymbol,
+                    };
+
+                    this.firstNameDictionary[this.list[i].FirstName].Remove(this.list[i]);
+                    if (this.firstNameDictionary.ContainsKey(firstName))
+                    {
+                        this.firstNameDictionary[firstName].Add(record);
+                    }
+                    else
+                    {
+                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        list.Add(record);
+                        this.firstNameDictionary.Add(firstName, list);
+                    }
+
+                    this.lastNameDictionary[this.list[i].LastName].Remove(this.list[i]);
+                    if (this.lastNameDictionary.ContainsKey(lastName))
+                    {
+                        this.lastNameDictionary[lastName].Add(record);
+                    }
+                    else
+                    {
+                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        list.Add(record);
+                        this.lastNameDictionary.Add(lastName, list);
+                    }
+
+                    if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+                    {
+                        this.dateOfBirthDictionary[dateOfBirth].Add(record);
+                    }
+                    else
+                    {
+                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        list.Add(record);
+                        this.dateOfBirthDictionary.Add(dateOfBirth, list);
+                    }
+
+                    this.list[i] = record;
                     return;
                 }
             }
 
             throw new ArgumentException("There is no record with such id");
+        }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            return this.firstNameDictionary[firstName].ToArray();
+        }
+
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            return this.lastNameDictionary[lastName].ToArray();
+        }
+
+        public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        {
+            return this.dateOfBirthDictionary[dateOfBirth].ToArray();
         }
 
         public FileCabinetRecord[] GetRecords()
