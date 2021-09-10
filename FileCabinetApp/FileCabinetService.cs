@@ -124,6 +124,20 @@ namespace FileCabinetApp
             throw new ArgumentException("There is no record with such id");
         }
 
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            List<FileCabinetRecord> listWithRecords = new List<FileCabinetRecord>();
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                if (this.list[i].FirstName.ToLower().Equals(firstName.ToLower()))
+                {
+                    listWithRecords.Add(this.list[i]);
+                }
+            }
+
+            return listWithRecords.ToArray();
+        }
+
         public FileCabinetRecord[] GetRecords()
         {
             return this.list.ToArray();
