@@ -270,7 +270,7 @@ namespace FileCabinetApp
                 var list = fileCabinetService.FindByFirstName(text);
                 for (int i = 0; i < list.Length; i++)
                 {
-                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
 
@@ -279,7 +279,7 @@ namespace FileCabinetApp
                 var list = fileCabinetService.FindByLastName(text);
                 for (int i = 0; i < list.Length; i++)
                 {
-                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
 
@@ -296,7 +296,7 @@ namespace FileCabinetApp
                 var list = fileCabinetService.FindByDateOfBirth(dateOfBirth);
                 for (int i = 0; i < list.Length; i++)
                 {
-                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
         }
@@ -313,7 +313,7 @@ namespace FileCabinetApp
             {
                 for (int i = 0; i < list.Length; i++)
                 {
-                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
         }
