@@ -137,13 +137,6 @@ namespace FileCabinetApp
                 parsed = short.TryParse(Console.ReadLine(), out workExperience);
             }
 
-            while (workExperience > 100)
-            {
-                Console.WriteLine("Invalid work experience input type, try short type");
-                Console.Write("Work experience: ");
-                _ = short.TryParse(Console.ReadLine(), out workExperience);
-            }
-
             Console.Write("Weight: ");
             parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
             while (!parsed)
@@ -162,8 +155,21 @@ namespace FileCabinetApp
                 parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
             }
 
-            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
-            Console.WriteLine($"Record #{id} is created");
+            try
+            {
+                int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
+                Console.WriteLine($"Record #{id} is created");
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Create(parameters);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Create(parameters);
+            }
         }
 
         private static void List(string parameters)
