@@ -240,12 +240,12 @@ namespace FileCabinetApp
                     catch (ArgumentNullException ex)
                     {
                         Console.WriteLine(ex.Message);
-                        Create(parameters);
+                        Edit(parameters);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        Create(parameters);
+                        Edit(parameters);
                     }
                 }
             }

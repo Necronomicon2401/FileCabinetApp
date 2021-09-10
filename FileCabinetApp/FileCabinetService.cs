@@ -6,6 +6,7 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short workExperience, decimal weight, char luckySymbol)
         {
@@ -61,6 +62,16 @@ namespace FileCabinetApp
             };
 
             this.list.Add(record);
+            if (this.firstNameDictionary.ContainsKey(firstName))
+            {
+                this.firstNameDictionary[firstName].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.firstNameDictionary.Add(firstName, list);
+            }
 
             return record.Id;
         }
@@ -111,13 +122,36 @@ namespace FileCabinetApp
             {
                 if (this.list[i].Id == id)
                 {
-                    this.list[i].FirstName = firstName;
-                    this.list[i].LastName = lastName;
-                    this.list[i].DateOfBirth = dateOfBirth;
-                    this.list[i].WorkExperience = workExperience;
-                    this.list[i].Weight = weight;
-                    this.list[i].LuckySymbol = luckySymbol;
-                    return;
+                    /*                    this.list[i].FirstName = firstName;
+                                        this.list[i].LastName = lastName;
+                                        this.list[i].DateOfBirth = dateOfBirth;
+                                        this.list[i].WorkExperience = workExperience;
+                                        this.list[i].Weight = weight;
+                                        this.list[i].LuckySymbol = luckySymbol;*/
+                    var record = new FileCabinetRecord
+                    {
+                        Id = id,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        DateOfBirth = dateOfBirth,
+                        WorkExperience = workExperience,
+                        Weight = weight,
+                        LuckySymbol = luckySymbol,
+                    };
+
+                    this.firstNameDictionary[this.list[i].FirstName].Remove(this.list[i]);
+                    if (this.firstNameDictionary.ContainsKey(firstName))
+                    {
+                        this.firstNameDictionary[firstName].Add(record);
+                    }
+                    else
+                    {
+                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        list.Add(record);
+                        this.firstNameDictionary.Add(firstName, list);
+                    }
+
+                    this.list[i] = record;
                 }
             }
 
@@ -126,16 +160,7 @@ namespace FileCabinetApp
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
-            List<FileCabinetRecord> listWithRecords = new List<FileCabinetRecord>();
-            for (int i = 0; i < this.list.Count; i++)
-            {
-                if (this.list[i].FirstName.ToLower().Equals(firstName.ToLower()))
-                {
-                    listWithRecords.Add(this.list[i]);
-                }
-            }
-
-            return listWithRecords.ToArray();
+            return this.firstNameDictionary[firstName].ToArray();
         }
 
         public FileCabinetRecord[] FindByLastName(string lastName)
