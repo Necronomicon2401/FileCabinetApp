@@ -22,6 +22,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("edit", Edit),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -31,6 +32,7 @@ namespace FileCabinetApp
             new string[] { "stat", "shows the number of records that the service stores", "The 'stat' command shows the number of records that the service stores." },
             new string[] { "create", "create new record", "The 'create' command create new record." },
             new string[] { "list", "shows list of records", "The 'list' command shows list of records." },
+            new string[] { "edit", "edit created record by id", "The 'edit' command allow to edit created record by id" },
         };
 
         public static void Main(string[] args)
@@ -170,6 +172,83 @@ namespace FileCabinetApp
                 Console.WriteLine(ex.Message);
                 Create(parameters);
             }
+        }
+
+        private static void Edit(string parameters)
+        {
+            var parsedId = int.TryParse(parameters, out int id);
+            if (!parsedId)
+            {
+                Console.WriteLine("Record id must be a number");
+                return;
+            }
+
+            var records = fileCabinetService.GetRecords();
+            for (int i = 0; i < records.Length; i++)
+            {
+                if (records[i].Id == id)
+                {
+                    string pattern = "MM/dd/yyyy";
+                    Console.Write("First name: ");
+                    string firstName = Console.ReadLine();
+                    Console.Write("Last name: ");
+                    string lastName = Console.ReadLine();
+                    Console.Write("Date of birth: ");
+                    var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
+                    while (!parsed)
+                    {
+                        Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
+                        Console.Write("Date of birth: ");
+                        parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
+                    }
+
+                    Console.Write("Work experience: ");
+                    parsed = short.TryParse(Console.ReadLine(), out short workExperience);
+                    while (!parsed)
+                    {
+                        Console.WriteLine("Invalid work experience input type, try short type");
+                        Console.Write("Work experience: ");
+                        parsed = short.TryParse(Console.ReadLine(), out workExperience);
+                    }
+
+                    Console.Write("Weight: ");
+                    parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
+                    while (!parsed)
+                    {
+                        Console.WriteLine("Invalid weight input type, try decimal type");
+                        Console.Write("Weight: ");
+                        parsed = decimal.TryParse(Console.ReadLine(), out weight);
+                    }
+
+                    Console.Write("Lucky symbol: ");
+                    parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
+                    while (!parsed)
+                    {
+                        Console.WriteLine("Invalid lucky symbol input, try to write one symbol");
+                        Console.Write("Lucky symbol: ");
+                        parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
+                    }
+
+                    try
+                    {
+                        fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
+                        Console.WriteLine($"Record #{id} is updated");
+                        return;
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Create(parameters);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Create(parameters);
+                    }
+                }
+            }
+
+            Console.WriteLine($"#{id} record is not found");
         }
 
         private static void List(string parameters)
