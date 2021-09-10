@@ -273,6 +273,15 @@ namespace FileCabinetApp
                     Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
+
+            if (property.ToLower().Equals("lastname"))
+            {
+                var list = fileCabinetService.FindByLastName(text);
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                }
+            }
         }
 
         private static void List(string parameters)
