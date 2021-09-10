@@ -9,6 +9,46 @@ namespace FileCabinetApp
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short workExperience, decimal weight, char luckySymbol)
         {
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new ArgumentNullException(nameof(firstName));
+            }
+
+            if (firstName.Length < 2 || firstName.Length > 60)
+            {
+                throw new ArgumentException("First name length must be greater then 1 and less then 61");
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName));
+            }
+
+            if (lastName.Length < 2 || lastName.Length > 60)
+            {
+                throw new ArgumentException("Last name length must be greater then 1 and less then 61");
+            }
+
+            if (dateOfBirth > DateTime.Now || dateOfBirth < new DateTime(1950, 1, 1))
+            {
+                throw new ArgumentException("Date of birth should be greater then 01/01/1950 and less then current date");
+            }
+
+            if (workExperience < 0 || workExperience > 70)
+            {
+                throw new ArgumentException("Work experience cannot be less then 0 or greater then 70");
+            }
+
+            if (weight < 0 || weight > 200)
+            {
+                throw new ArgumentException("Weight cannot be less then 0 or greater then 200");
+            }
+
+            if (luckySymbol == ' ')
+            {
+                throw new ArgumentException("Lucky symbol cannot be empty");
+            }
+
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -23,6 +63,65 @@ namespace FileCabinetApp
             this.list.Add(record);
 
             return record.Id;
+        }
+
+        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short workExperience, decimal weight, char luckySymbol)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new ArgumentNullException(nameof(firstName));
+            }
+
+            if (firstName.Length < 2 || firstName.Length > 60)
+            {
+                throw new ArgumentException("First name length must be greater then 1 and less then 61");
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName));
+            }
+
+            if (lastName.Length < 2 || lastName.Length > 60)
+            {
+                throw new ArgumentException("Last name length must be greater then 1 and less then 61");
+            }
+
+            if (dateOfBirth > DateTime.Now || dateOfBirth < new DateTime(1950, 1, 1))
+            {
+                throw new ArgumentException("Date of birth should be greater then 01/01/1950 and less then current date");
+            }
+
+            if (workExperience < 0 || workExperience > 70)
+            {
+                throw new ArgumentException("Work experience cannot be less then 0 or greater then 70");
+            }
+
+            if (weight < 0 || weight > 200)
+            {
+                throw new ArgumentException("Weight cannot be less then 0 or greater then 200");
+            }
+
+            if (luckySymbol == ' ')
+            {
+                throw new ArgumentException("Lucky symbol cannot be empty");
+            }
+
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                if (this.list[i].Id == id)
+                {
+                    this.list[i].FirstName = firstName;
+                    this.list[i].LastName = lastName;
+                    this.list[i].DateOfBirth = dateOfBirth;
+                    this.list[i].WorkExperience = workExperience;
+                    this.list[i].Weight = weight;
+                    this.list[i].LuckySymbol = luckySymbol;
+                    return;
+                }
+            }
+
+            throw new ArgumentException("There is no record with such id");
         }
 
         public FileCabinetRecord[] GetRecords()
