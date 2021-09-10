@@ -282,6 +282,23 @@ namespace FileCabinetApp
                     Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
             }
+
+            if (property.ToLower().Equals("dateofbirth"))
+            {
+                string pattern = "yyyy-MMM-dd";
+                var parsed = DateTime.TryParseExact(text, pattern, ci, 0, out DateTime dateOfBirth);
+                if (!parsed)
+                {
+                    Console.WriteLine("Invalid date type, please, use yyyy-MMM-dd (2001-Dec-01) pattern");
+                    return;
+                }
+
+                var list = fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                for (int i = 0; i < list.Length; i++)
+                {
+                    Console.WriteLine($"#{i + 1}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                }
+            }
         }
 
         private static void List(string parameters)
