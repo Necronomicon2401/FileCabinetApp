@@ -149,11 +149,12 @@ namespace FileCabinetApp
         /// <param name="parameters">String representation of writed command parameters.</param>
         private static void Create(string parameters)
         {
+            FileCabinetRecord newRecord = new ();
             string datePattern = "MM/dd/yyyy";
             Console.Write("First name: ");
-            string firstName = Console.ReadLine();
+            newRecord.FirstName = Console.ReadLine();
             Console.Write("Last name: ");
-            string lastName = Console.ReadLine();
+            newRecord.LastName = Console.ReadLine();
             Console.Write("Date of birth: ");
             var parsed = DateTime.TryParseExact(Console.ReadLine(), datePattern, null, 0, out DateTime dateOfBirth);
             while (!parsed)
@@ -162,6 +163,8 @@ namespace FileCabinetApp
                 Console.Write("Date of birth: ");
                 parsed = DateTime.TryParseExact(Console.ReadLine(), datePattern, null, 0, out dateOfBirth);
             }
+
+            newRecord.DateOfBirth = dateOfBirth;
 
             Console.Write("Work experience: ");
             parsed = short.TryParse(Console.ReadLine(), out short workExperience);
@@ -172,6 +175,8 @@ namespace FileCabinetApp
                 parsed = short.TryParse(Console.ReadLine(), out workExperience);
             }
 
+            newRecord.WorkExperience = workExperience;
+
             Console.Write("Weight: ");
             parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
             while (!parsed)
@@ -180,6 +185,8 @@ namespace FileCabinetApp
                 Console.Write("Weight: ");
                 parsed = decimal.TryParse(Console.ReadLine(), out weight);
             }
+
+            newRecord.Weight = weight;
 
             Console.Write("Lucky symbol: ");
             parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
@@ -190,9 +197,11 @@ namespace FileCabinetApp
                 parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
             }
 
+            newRecord.LuckySymbol = luckySymbol;
+
             try
             {
-                int id = FileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
+                int id = FileCabinetService.CreateRecord(newRecord);
                 Console.WriteLine($"Record #{id} is created");
             }
             catch (ArgumentNullException ex)
@@ -230,11 +239,13 @@ namespace FileCabinetApp
 
             if (isRecordExist)
             {
+                FileCabinetRecord updatedRecord = new ();
+                updatedRecord.Id = id;
                 string pattern = "MM/dd/yyyy";
                 Console.Write("First name: ");
-                string firstName = Console.ReadLine();
+                updatedRecord.FirstName = Console.ReadLine();
                 Console.Write("Last name: ");
-                string lastName = Console.ReadLine();
+                updatedRecord.LastName = Console.ReadLine();
                 Console.Write("Date of birth: ");
                 var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
                 while (!parsed)
@@ -243,6 +254,8 @@ namespace FileCabinetApp
                     Console.Write("Date of birth: ");
                     parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
                 }
+
+                updatedRecord.DateOfBirth = dateOfBirth;
 
                 Console.Write("Work experience: ");
                 parsed = short.TryParse(Console.ReadLine(), out short workExperience);
@@ -253,6 +266,8 @@ namespace FileCabinetApp
                     parsed = short.TryParse(Console.ReadLine(), out workExperience);
                 }
 
+                updatedRecord.WorkExperience = workExperience;
+
                 Console.Write("Weight: ");
                 parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
                 while (!parsed)
@@ -261,6 +276,8 @@ namespace FileCabinetApp
                     Console.Write("Weight: ");
                     parsed = decimal.TryParse(Console.ReadLine(), out weight);
                 }
+
+                updatedRecord.Weight = weight;
 
                 Console.Write("Lucky symbol: ");
                 parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
@@ -271,9 +288,11 @@ namespace FileCabinetApp
                     parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
                 }
 
+                updatedRecord.LuckySymbol = luckySymbol;
+
                 try
                 {
-                    FileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
+                    FileCabinetService.EditRecord(updatedRecord);
                     Console.WriteLine($"Record #{id} is updated");
                 }
                 catch (ArgumentNullException ex)

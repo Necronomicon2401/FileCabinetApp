@@ -56,29 +56,18 @@
             Application service class.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Creates record as FileCabinetRecord object and add it to all dictionaries.
             </summary>
-            <param name="firstName">Person first name.</param>
-            <param name="lastName">Person last name.</param>
-            <param name="dateOfBirth">Person date of birth.</param>
-            <param name="workExperience">Person work experience.</param>
-            <param name="weight">Person weight.</param>
-            <param name="luckySymbol">Person lucky symbol.</param>
+            <param name="record">Person record.</param>
             <returns>Return created record id.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            Edits record if it exist and update all dictionaries.
+            Change record if it exist and update all dictionaries.
             </summary>
-            <param name="id">Record id.</param>
-            <param name="firstName">Edited first name.</param>
-            <param name="lastName">Edited last name.</param>
-            <param name="dateOfBirth">Edited date of birth.</param>
-            <param name="workExperience">Edited work experience.</param>
-            <param name="weight">Edited weight.</param>
-            <param name="luckySymbol">Edited lucky symbol.</param>
+            <param name="record">Edited record.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
             <summary>

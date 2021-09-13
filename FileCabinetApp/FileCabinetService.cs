@@ -16,205 +16,173 @@ namespace FileCabinetApp
         /// <summary>
         /// Creates record as FileCabinetRecord object and add it to all dictionaries.
         /// </summary>
-        /// <param name="firstName">Person first name.</param>
-        /// <param name="lastName">Person last name.</param>
-        /// <param name="dateOfBirth">Person date of birth.</param>
-        /// <param name="workExperience">Person work experience.</param>
-        /// <param name="weight">Person weight.</param>
-        /// <param name="luckySymbol">Person lucky symbol.</param>
+        /// <param name="record">Person record.</param>
         /// <returns>Return created record id.</returns>
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short workExperience, decimal weight, char luckySymbol)
+        public int CreateRecord(FileCabinetRecord record)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
+            if (string.IsNullOrWhiteSpace(record.FirstName))
             {
-                throw new ArgumentNullException(nameof(firstName));
+                throw new ArgumentNullException(nameof(record.FirstName));
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (record.FirstName.Length < 2 || record.FirstName.Length > 60)
             {
                 throw new ArgumentException("First name length must be greater then 1 and less then 61");
             }
 
-            if (string.IsNullOrWhiteSpace(lastName))
+            if (string.IsNullOrWhiteSpace(record.LastName))
             {
-                throw new ArgumentNullException(nameof(lastName));
+                throw new ArgumentNullException(nameof(record.LastName));
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (record.LastName.Length < 2 || record.LastName.Length > 60)
             {
                 throw new ArgumentException("Last name length must be greater then 1 and less then 61");
             }
 
-            if (dateOfBirth > DateTime.Now || dateOfBirth < new DateTime(1950, 1, 1))
+            if (record.DateOfBirth > DateTime.Now || record.DateOfBirth < new DateTime(1950, 1, 1))
             {
                 throw new ArgumentException("Date of birth should be greater then 01/01/1950 and less then current date");
             }
 
-            if (workExperience < 0 || workExperience > 70)
+            if (record.WorkExperience < 0 || record.WorkExperience > 70)
             {
                 throw new ArgumentException("Work experience cannot be less then 0 or greater then 70");
             }
 
-            if (weight < 0 || weight > 200)
+            if (record.Weight < 0 || record.Weight > 200)
             {
                 throw new ArgumentException("Weight cannot be less then 0 or greater then 200");
             }
 
-            if (luckySymbol == ' ')
+            if (record.LuckySymbol == ' ')
             {
                 throw new ArgumentException("Lucky symbol cannot be empty");
             }
 
-            var record = new FileCabinetRecord
-            {
-                Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                WorkExperience = workExperience,
-                Weight = weight,
-                LuckySymbol = luckySymbol,
-            };
-
+            record.Id = this.list.Count + 1;
             this.list.Add(record);
 
-            if (this.firstNameDictionary.ContainsKey(firstName))
+            if (this.firstNameDictionary.ContainsKey(record.FirstName))
             {
-                this.firstNameDictionary[firstName].Add(record);
+                this.firstNameDictionary[record.FirstName].Add(record);
             }
             else
             {
                 List<FileCabinetRecord> list = new ();
                 list.Add(record);
-                this.firstNameDictionary.Add(firstName, list);
+                this.firstNameDictionary.Add(record.FirstName, list);
             }
 
-            if (this.lastNameDictionary.ContainsKey(lastName))
+            if (this.lastNameDictionary.ContainsKey(record.LastName))
             {
-                this.lastNameDictionary[lastName].Add(record);
+                this.lastNameDictionary[record.LastName].Add(record);
             }
             else
             {
                 List<FileCabinetRecord> list = new ();
                 list.Add(record);
-                this.lastNameDictionary.Add(lastName, list);
+                this.lastNameDictionary.Add(record.LastName, list);
             }
 
-            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            if (this.dateOfBirthDictionary.ContainsKey(record.DateOfBirth))
             {
-                this.dateOfBirthDictionary[dateOfBirth].Add(record);
+                this.dateOfBirthDictionary[record.DateOfBirth].Add(record);
             }
             else
             {
                 List<FileCabinetRecord> list = new ();
                 list.Add(record);
-                this.dateOfBirthDictionary.Add(dateOfBirth, list);
+                this.dateOfBirthDictionary.Add(record.DateOfBirth, list);
             }
 
             return record.Id;
         }
 
         /// <summary>
-        /// Edits record if it exist and update all dictionaries.
+        /// Change record if it exist and update all dictionaries.
         /// </summary>
-        /// <param name="id">Record id.</param>
-        /// <param name="firstName">Edited first name.</param>
-        /// <param name="lastName">Edited last name.</param>
-        /// <param name="dateOfBirth">Edited date of birth.</param>
-        /// <param name="workExperience">Edited work experience.</param>
-        /// <param name="weight">Edited weight.</param>
-        /// <param name="luckySymbol">Edited lucky symbol.</param>
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short workExperience, decimal weight, char luckySymbol)
+        /// <param name="record">Edited record.</param>
+        public void EditRecord(FileCabinetRecord record)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
+            if (string.IsNullOrWhiteSpace(record.FirstName))
             {
-                throw new ArgumentNullException(nameof(firstName));
+                throw new ArgumentNullException(nameof(record.FirstName));
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (record.FirstName.Length < 2 || record.FirstName.Length > 60)
             {
                 throw new ArgumentException("First name length must be greater then 1 and less then 61");
             }
 
-            if (string.IsNullOrWhiteSpace(lastName))
+            if (string.IsNullOrWhiteSpace(record.LastName))
             {
-                throw new ArgumentNullException(nameof(lastName));
+                throw new ArgumentNullException(nameof(record.LastName));
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (record.LastName.Length < 2 || record.LastName.Length > 60)
             {
                 throw new ArgumentException("Last name length must be greater then 1 and less then 61");
             }
 
-            if (dateOfBirth > DateTime.Now || dateOfBirth < new DateTime(1950, 1, 1))
+            if (record.DateOfBirth > DateTime.Now || record.DateOfBirth < new DateTime(1950, 1, 1))
             {
                 throw new ArgumentException("Date of birth should be greater then 01/01/1950 and less then current date");
             }
 
-            if (workExperience < 0 || workExperience > 70)
+            if (record.WorkExperience < 0 || record.WorkExperience > 70)
             {
                 throw new ArgumentException("Work experience cannot be less then 0 or greater then 70");
             }
 
-            if (weight < 0 || weight > 200)
+            if (record.Weight < 0 || record.Weight > 200)
             {
                 throw new ArgumentException("Weight cannot be less then 0 or greater then 200");
             }
 
-            if (luckySymbol == ' ')
+            if (record.LuckySymbol == ' ')
             {
                 throw new ArgumentException("Lucky symbol cannot be empty");
             }
 
             for (int i = 0; i < this.list.Count; i++)
             {
-                if (this.list[i].Id == id)
+                if (this.list[i].Id == record.Id)
                 {
-                    var record = new FileCabinetRecord
-                    {
-                        Id = id,
-                        FirstName = firstName,
-                        LastName = lastName,
-                        DateOfBirth = dateOfBirth,
-                        WorkExperience = workExperience,
-                        Weight = weight,
-                        LuckySymbol = luckySymbol,
-                    };
-
                     this.firstNameDictionary[this.list[i].FirstName].Remove(this.list[i]);
-                    if (this.firstNameDictionary.ContainsKey(firstName))
+                    if (this.firstNameDictionary.ContainsKey(record.FirstName))
                     {
-                        this.firstNameDictionary[firstName].Add(record);
+                        this.firstNameDictionary[record.FirstName].Add(record);
                     }
                     else
                     {
                         List<FileCabinetRecord> list = new ();
                         list.Add(record);
-                        this.firstNameDictionary.Add(firstName, list);
+                        this.firstNameDictionary.Add(record.FirstName, list);
                     }
 
                     this.lastNameDictionary[this.list[i].LastName].Remove(this.list[i]);
-                    if (this.lastNameDictionary.ContainsKey(lastName))
+                    if (this.lastNameDictionary.ContainsKey(record.LastName))
                     {
-                        this.lastNameDictionary[lastName].Add(record);
+                        this.lastNameDictionary[record.LastName].Add(record);
                     }
                     else
                     {
                         List<FileCabinetRecord> list = new ();
                         list.Add(record);
-                        this.lastNameDictionary.Add(lastName, list);
+                        this.lastNameDictionary.Add(record.LastName, list);
                     }
 
                     this.dateOfBirthDictionary[this.list[i].DateOfBirth].Remove(this.list[i]);
-                    if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+                    if (this.dateOfBirthDictionary.ContainsKey(record.DateOfBirth))
                     {
-                        this.dateOfBirthDictionary[dateOfBirth].Add(record);
+                        this.dateOfBirthDictionary[record.DateOfBirth].Add(record);
                     }
                     else
                     {
                         List<FileCabinetRecord> list = new ();
                         list.Add(record);
-                        this.dateOfBirthDictionary.Add(dateOfBirth, list);
+                        this.dateOfBirthDictionary.Add(record.DateOfBirth, list);
                     }
 
                     this.list[i] = record;
