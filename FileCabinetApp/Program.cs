@@ -11,11 +11,9 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
-        private static FileCabinetService fileCabinetService = new ();
+        private static readonly FileCabinetService FileCabinetService = new ();
 
-        private static bool isRunning = true;
-
-        private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
+        private static readonly Tuple<string, Action<string>>[] Commands = new Tuple<string, Action<string>>[]
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -26,7 +24,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
         };
 
-        private static string[][] helpMessages = new string[][]
+        private static readonly string[][] HelpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
@@ -37,8 +35,15 @@ namespace FileCabinetApp
             new string[] { "find", "find and shows created records by inputed property", "The 'find' command find and shows created records by inputed property." },
         };
 
+        private static bool isRunning = true;
+
         public static void Main(string[] args)
         {
+            if (args is null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
@@ -56,12 +61,12 @@ namespace FileCabinetApp
                     continue;
                 }
 
-                var index = Array.FindIndex(commands, 0, commands.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(Commands, 0, Commands.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
                     const int parametersIndex = 1;
                     var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
-                    commands[index].Item2(parameters);
+                    Commands[index].Item2(parameters);
                 }
                 else
                 {
@@ -81,10 +86,10 @@ namespace FileCabinetApp
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[Program.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(HelpMessages, 0, HelpMessages.Length, i => string.Equals(i[Program.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
-                    Console.WriteLine(helpMessages[index][Program.ExplanationHelpIndex]);
+                    Console.WriteLine(HelpMessages[index][Program.ExplanationHelpIndex]);
                 }
                 else
                 {
@@ -95,7 +100,7 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Available commands:");
 
-                foreach (var helpMessage in helpMessages)
+                foreach (var helpMessage in HelpMessages)
                 {
                     Console.WriteLine("\t{0}\t- {1}", helpMessage[Program.CommandHelpIndex], helpMessage[Program.DescriptionHelpIndex]);
                 }
@@ -112,24 +117,23 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{Program.FileCabinetService.GetStat()} record(s).");
         }
 
         private static void Create(string parameters)
         {
-            string pattern = "MM/dd/yyyy";
+            string datePattern = "MM/dd/yyyy";
             Console.Write("First name: ");
             string firstName = Console.ReadLine();
             Console.Write("Last name: ");
             string lastName = Console.ReadLine();
             Console.Write("Date of birth: ");
-            var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
+            var parsed = DateTime.TryParseExact(Console.ReadLine(), datePattern, null, 0, out DateTime dateOfBirth);
             while (!parsed)
             {
                 Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
                 Console.Write("Date of birth: ");
-                parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
+                parsed = DateTime.TryParseExact(Console.ReadLine(), datePattern, null, 0, out dateOfBirth);
             }
 
             Console.Write("Work experience: ");
@@ -161,101 +165,104 @@ namespace FileCabinetApp
 
             try
             {
-                int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
+                int id = FileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
                 Console.WriteLine($"Record #{id} is created");
             }
             catch (ArgumentNullException ex)
             {
                 Console.WriteLine(ex.Message);
-                Create(parameters);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Create(parameters);
             }
         }
 
         private static void Edit(string parameters)
         {
-            var parsedId = int.TryParse(parameters, out int id);
-            if (!parsedId)
+            var isIdParsed = int.TryParse(parameters, out int id);
+            if (!isIdParsed)
             {
                 Console.WriteLine("Record id must be a number");
                 return;
             }
 
-            var records = fileCabinetService.GetRecords();
+            var records = Program.FileCabinetService.GetRecords();
+            bool isRecordExist = false;
             for (int i = 0; i < records.Length; i++)
             {
                 if (records[i].Id == id)
                 {
-                    string pattern = "MM/dd/yyyy";
-                    Console.Write("First name: ");
-                    string firstName = Console.ReadLine();
-                    Console.Write("Last name: ");
-                    string lastName = Console.ReadLine();
-                    Console.Write("Date of birth: ");
-                    var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
-                    while (!parsed)
-                    {
-                        Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
-                        Console.Write("Date of birth: ");
-                        parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
-                    }
-
-                    Console.Write("Work experience: ");
-                    parsed = short.TryParse(Console.ReadLine(), out short workExperience);
-                    while (!parsed)
-                    {
-                        Console.WriteLine("Invalid work experience input type, try short type");
-                        Console.Write("Work experience: ");
-                        parsed = short.TryParse(Console.ReadLine(), out workExperience);
-                    }
-
-                    Console.Write("Weight: ");
-                    parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
-                    while (!parsed)
-                    {
-                        Console.WriteLine("Invalid weight input type, try decimal type");
-                        Console.Write("Weight: ");
-                        parsed = decimal.TryParse(Console.ReadLine(), out weight);
-                    }
-
-                    Console.Write("Lucky symbol: ");
-                    parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
-                    while (!parsed)
-                    {
-                        Console.WriteLine("Invalid lucky symbol input, try to write one symbol");
-                        Console.Write("Lucky symbol: ");
-                        parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
-                    }
-
-                    try
-                    {
-                        fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
-                        Console.WriteLine($"Record #{id} is updated");
-                        return;
-                    }
-                    catch (ArgumentNullException ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Edit(parameters);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Edit(parameters);
-                    }
+                    isRecordExist = true;
                 }
             }
 
-            Console.WriteLine($"#{id} record is not found");
+            if (isRecordExist)
+            {
+                string pattern = "MM/dd/yyyy";
+                Console.Write("First name: ");
+                string firstName = Console.ReadLine();
+                Console.Write("Last name: ");
+                string lastName = Console.ReadLine();
+                Console.Write("Date of birth: ");
+                var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
+                while (!parsed)
+                {
+                    Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
+                    Console.Write("Date of birth: ");
+                    parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
+                }
+
+                Console.Write("Work experience: ");
+                parsed = short.TryParse(Console.ReadLine(), out short workExperience);
+                while (!parsed)
+                {
+                    Console.WriteLine("Invalid work experience input type, try short type");
+                    Console.Write("Work experience: ");
+                    parsed = short.TryParse(Console.ReadLine(), out workExperience);
+                }
+
+                Console.Write("Weight: ");
+                parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
+                while (!parsed)
+                {
+                    Console.WriteLine("Invalid weight input type, try decimal type");
+                    Console.Write("Weight: ");
+                    parsed = decimal.TryParse(Console.ReadLine(), out weight);
+                }
+
+                Console.Write("Lucky symbol: ");
+                parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
+                while (!parsed)
+                {
+                    Console.WriteLine("Invalid lucky symbol input, try to write one symbol");
+                    Console.Write("Lucky symbol: ");
+                    parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
+                }
+
+                try
+                {
+                    FileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, workExperience, weight, luckySymbol);
+                    Console.WriteLine($"Record #{id} is updated");
+                }
+                catch (ArgumentNullException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"#{id} record is not found");
+            }
         }
 
         private static void Find(string parameters)
         {
-            CultureInfo ci = new CultureInfo("en-US");
+            CultureInfo ci = new ("en-US");
             var inputs = parameters.Split(' ', 2);
             if (inputs.Length != 2)
             {
@@ -267,23 +274,35 @@ namespace FileCabinetApp
             string text = inputs[1].Replace("\"", string.Empty);
             if (property.ToLower().Equals("firstname"))
             {
-                var list = fileCabinetService.FindByFirstName(text);
-                for (int i = 0; i < list.Length; i++)
+                var list = FileCabinetService.FindByFirstName(text);
+                if (list is null)
                 {
-                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine("There aren't such records");
+                }
+                else
+                {
+                    for (int i = 0; i < list.Length; i++)
+                    {
+                        Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    }
                 }
             }
-
-            if (property.ToLower().Equals("lastname"))
+            else if (property.ToLower().Equals("lastname"))
             {
-                var list = fileCabinetService.FindByLastName(text);
-                for (int i = 0; i < list.Length; i++)
+                var list = FileCabinetService.FindByLastName(text);
+                if (list is null)
                 {
-                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine("There aren't such records");
+                }
+                else
+                {
+                    for (int i = 0; i < list.Length; i++)
+                    {
+                        Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    }
                 }
             }
-
-            if (property.ToLower().Equals("dateofbirth"))
+            else if (property.ToLower().Equals("dateofbirth"))
             {
                 string pattern = "yyyy-MMM-dd";
                 var parsed = DateTime.TryParseExact(text, pattern, ci, 0, out DateTime dateOfBirth);
@@ -293,18 +312,29 @@ namespace FileCabinetApp
                     return;
                 }
 
-                var list = fileCabinetService.FindByDateOfBirth(dateOfBirth);
-                for (int i = 0; i < list.Length; i++)
+                var list = FileCabinetService.FindByDateOfBirth(dateOfBirth);
+                if (list is null)
                 {
-                    Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    Console.WriteLine("There aren't such records");
                 }
+                else
+                {
+                    for (int i = 0; i < list.Length; i++)
+                    {
+                        Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("There isn't such property for search");
             }
         }
 
         private static void List(string parameters)
         {
-            var list = fileCabinetService.GetRecords();
-            CultureInfo ci = new CultureInfo("en-US");
+            var list = FileCabinetService.GetRecords();
+            CultureInfo ci = new ("en-US");
             if (list.Length == 0)
             {
                 Console.WriteLine("List of records is empty, please use 'create' command to add record");

@@ -5,10 +5,10 @@ namespace FileCabinetApp
 {
     public class FileCabinetService
     {
-        private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
-        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
-        private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
+        private readonly List<FileCabinetRecord> list = new ();
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
+        private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short workExperience, decimal weight, char luckySymbol)
         {
@@ -71,7 +71,7 @@ namespace FileCabinetApp
             }
             else
             {
-                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                List<FileCabinetRecord> list = new ();
                 list.Add(record);
                 this.firstNameDictionary.Add(firstName, list);
             }
@@ -82,7 +82,7 @@ namespace FileCabinetApp
             }
             else
             {
-                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                List<FileCabinetRecord> list = new ();
                 list.Add(record);
                 this.lastNameDictionary.Add(lastName, list);
             }
@@ -93,7 +93,7 @@ namespace FileCabinetApp
             }
             else
             {
-                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                List<FileCabinetRecord> list = new ();
                 list.Add(record);
                 this.dateOfBirthDictionary.Add(dateOfBirth, list);
             }
@@ -165,7 +165,7 @@ namespace FileCabinetApp
                     }
                     else
                     {
-                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        List<FileCabinetRecord> list = new ();
                         list.Add(record);
                         this.firstNameDictionary.Add(firstName, list);
                     }
@@ -177,18 +177,19 @@ namespace FileCabinetApp
                     }
                     else
                     {
-                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        List<FileCabinetRecord> list = new ();
                         list.Add(record);
                         this.lastNameDictionary.Add(lastName, list);
                     }
 
+                    this.dateOfBirthDictionary[this.list[i].DateOfBirth].Remove(this.list[i]);
                     if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
                     {
                         this.dateOfBirthDictionary[dateOfBirth].Add(record);
                     }
                     else
                     {
-                        List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                        List<FileCabinetRecord> list = new ();
                         list.Add(record);
                         this.dateOfBirthDictionary.Add(dateOfBirth, list);
                     }
@@ -203,17 +204,38 @@ namespace FileCabinetApp
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
-            return this.firstNameDictionary[firstName].ToArray();
+            if (!this.firstNameDictionary.ContainsKey(firstName))
+            {
+                return null;
+            }
+            else
+            {
+                return this.firstNameDictionary[firstName].ToArray();
+            }
         }
 
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
-            return this.lastNameDictionary[lastName].ToArray();
+            if (!this.lastNameDictionary.ContainsKey(lastName))
+            {
+                return null;
+            }
+            else
+            {
+                return this.lastNameDictionary[lastName].ToArray();
+            }
         }
 
         public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
         {
-            return this.dateOfBirthDictionary[dateOfBirth].ToArray();
+            if (!this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            {
+                return null;
+            }
+            else
+            {
+                return this.dateOfBirthDictionary[dateOfBirth].ToArray();
+            }
         }
 
         public FileCabinetRecord[] GetRecords()
