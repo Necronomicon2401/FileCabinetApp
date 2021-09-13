@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Main class of FileCabinetApp.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Dmitry Bolbat";
@@ -29,14 +32,18 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "shows the number of records that the service stores", "The 'stat' command shows the number of records that the service stores." },
-            new string[] { "create", "create new record", "The 'create' command create new record." },
+            new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "list", "shows list of records", "The 'list' command shows list of records." },
-            new string[] { "edit", "edit created record by id", "The 'edit' command allow to edit created record by id." },
-            new string[] { "find", "find and shows created records by inputed property", "The 'find' command find and shows created records by inputed property." },
+            new string[] { "edit", "edits created record by id", "The 'edit' command allows to edit created record by id." },
+            new string[] { "find", "finds and shows created records by inputed property", "The 'find' command finds and shows created records by inputed property." },
         };
 
         private static bool isRunning = true;
 
+        /// <summary>
+        /// Starting point of console application.
+        /// </summary>
+        /// <param name="args">Command line arguments.</param>
         public static void Main(string[] args)
         {
             if (args is null)
@@ -76,12 +83,20 @@ namespace FileCabinetApp
             while (isRunning);
         }
 
+        /// <summary>
+        /// Prints information about not existing command writed by user.
+        /// </summary>
+        /// <param name="command">String representation of writed command.</param>
         private static void PrintMissedCommandInfo(string command)
         {
             Console.WriteLine($"There is no '{command}' command.");
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Prints information about all commands that application support.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
         private static void PrintHelp(string parameters)
         {
             if (!string.IsNullOrEmpty(parameters))
@@ -109,17 +124,29 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Exits the application.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
         private static void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
         }
 
+        /// <summary>
+        /// Prints the number of records that the service stores.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
         private static void Stat(string parameters)
         {
             Console.WriteLine($"{Program.FileCabinetService.GetStat()} record(s).");
         }
 
+        /// <summary>
+        /// Creates new record and save it as FileCabinetRecord object.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
         private static void Create(string parameters)
         {
             string datePattern = "MM/dd/yyyy";
@@ -178,6 +205,10 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Edits existing record and save it as FileCabinetRecord object.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
         private static void Edit(string parameters)
         {
             var isIdParsed = int.TryParse(parameters, out int id);
@@ -260,6 +291,10 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Finds and prints records according to some property.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
         private static void Find(string parameters)
         {
             CultureInfo ci = new ("en-US");
@@ -331,6 +366,10 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Prints all existing records.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
         private static void List(string parameters)
         {
             var list = FileCabinetService.GetRecords();
