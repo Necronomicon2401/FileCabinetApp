@@ -4,6 +4,28 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            Validation class with custom parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validation record with custom parameters.
+            </summary>
+            <param name="record">Person record.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            Validation class with default parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validation record with default parameters.
+            </summary>
+            <param name="record">Person record.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Class that represent record.
@@ -101,6 +123,12 @@
             Gets count of all records.
             </summary>
             <returns>Count of all records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validation record with default parameters.
+            </summary>
+            <param name="record">Person record.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
