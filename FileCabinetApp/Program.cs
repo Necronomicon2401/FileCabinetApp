@@ -92,21 +92,21 @@ namespace FileCabinetApp
         {
             if (args.Length == 0)
             {
-                fileCabinetService = new FileCabinetDefaultService();
+                fileCabinetService = new FileCabinetService(new DefaultValidator());
                 Console.WriteLine("Using default validation rules.");
                 return;
             }
 
             if (args[0].ToLower() == "--validation-rules=default")
             {
-                fileCabinetService = new FileCabinetDefaultService();
+                fileCabinetService = new FileCabinetService(new DefaultValidator());
                 Console.WriteLine("Using default validation rules.");
                 return;
             }
 
             if (args[0].ToLower() == "--validation-rules=custom")
             {
-                fileCabinetService = new FileCabinetCustomService();
+                fileCabinetService = new FileCabinetService(new CustomValidator());
                 Console.WriteLine("Using custom validation rules.");
                 return;
             }
@@ -115,14 +115,14 @@ namespace FileCabinetApp
             {
                 if (args[1].ToLower() == "default")
                 {
-                    fileCabinetService = new FileCabinetDefaultService();
+                    fileCabinetService = new FileCabinetService(new DefaultValidator());
                     Console.WriteLine("Using default validation rules.");
                     return;
                 }
 
                 if (args[1].ToLower() == "custom")
                 {
-                    fileCabinetService = new FileCabinetCustomService();
+                    fileCabinetService = new FileCabinetService(new CustomValidator());
                     Console.WriteLine("Using custom validation rules.");
                     return;
                 }
