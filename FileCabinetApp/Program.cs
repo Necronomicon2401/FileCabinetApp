@@ -275,7 +275,7 @@ namespace FileCabinetApp
 
             var records = fileCabinetService.GetRecords();
             bool isRecordExist = false;
-            for (int i = 0; i < records.Length; i++)
+            for (int i = 0; i < records.Count; i++)
             {
                 if (records[i].Id == id)
                 {
@@ -381,7 +381,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    for (int i = 0; i < list.Length; i++)
+                    for (int i = 0; i < list.Count; i++)
                     {
                         Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                     }
@@ -396,7 +396,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    for (int i = 0; i < list.Length; i++)
+                    for (int i = 0; i < list.Count; i++)
                     {
                         Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                     }
@@ -419,7 +419,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    for (int i = 0; i < list.Length; i++)
+                    for (int i = 0; i < list.Count; i++)
                     {
                         Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                     }
@@ -439,13 +439,13 @@ namespace FileCabinetApp
         {
             var list = fileCabinetService.GetRecords();
             CultureInfo ci = new ("en-US");
-            if (list.Length == 0)
+            if (list.Count == 0)
             {
                 Console.WriteLine("List of records is empty, please use 'create' command to add record");
             }
             else
             {
-                for (int i = 0; i < list.Length; i++)
+                for (int i = 0; i < list.Count; i++)
                 {
                     Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
