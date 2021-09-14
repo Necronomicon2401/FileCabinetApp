@@ -20,7 +20,7 @@ namespace FileCabinetApp
         /// <returns>Return created record id.</returns>
         public int CreateRecord(FileCabinetRecord record)
         {
-            this.ValidateParameters(record);
+            this.CreateValidator().ValidateParameters(record);
             record.Id = this.list.Count + 1;
             this.list.Add(record);
 
@@ -66,7 +66,7 @@ namespace FileCabinetApp
         /// <param name="record">Edited record.</param>
         public void EditRecord(FileCabinetRecord record)
         {
-            this.ValidateParameters(record);
+            this.CreateValidator().ValidateParameters(record);
             for (int i = 0; i < this.list.Count; i++)
             {
                 if (this.list[i].Id == record.Id)
@@ -185,9 +185,9 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Validation record with default parameters.
+        /// Create validator with choosen settings.
         /// </summary>
-        /// <param name="record">Person record.</param>
-        protected abstract void ValidateParameters(FileCabinetRecord record);
+        /// <returns>Validator with choosen settings.</returns>
+        protected abstract IRecordValidator CreateValidator();
     }
 }

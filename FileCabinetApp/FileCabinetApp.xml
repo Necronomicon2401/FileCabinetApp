@@ -4,27 +4,49 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
+        <member name="T:FileCabinetApp.CustomValidator">
             <summary>
-            Validation class with custom parameters.
+            Validator class with custom parameters.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            Validation record with custom parameters.
+            Validate record with custom parameters.
             </summary>
-            <param name="record">Person record.</param>
+            <param name="record">Record to validate.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            Validator class with default parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validate record with default parameters.
+            </summary>
+            <param name="record">Record to validate.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            Class that creates validator with custom settings.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
+            <summary>
+            Creates validator with custom settings.
+            </summary>
+            <returns>Validator with custom settings.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
-            Validation class with default parameters.
+            Class that creates validator with default settings.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
             <summary>
-            Validation record with default parameters.
+            Creates validator with default settings.
             </summary>
-            <param name="record">Person record.</param>
+            <returns>Validator with default settings.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -124,11 +146,22 @@
             </summary>
             <returns>Count of all records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
             <summary>
-            Validation record with default parameters.
+            Create validator with choosen settings.
             </summary>
-            <param name="record">Person record.</param>
+            <returns>Validator with choosen settings.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Interface for validators.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validate record.
+            </summary>
+            <param name="record">Record to validate.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
