@@ -3,17 +3,16 @@
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Class that creates validator with default settings.
+    /// Class that creates new instance of <see cref="FileCabinetDefaultService"/> class with default validator settings.
     /// </summary>
     public class FileCabinetDefaultService : FileCabinetService
     {
         /// <summary>
-        /// Creates validator with default settings.
+        /// Initializes a new instance of the <see cref="FileCabinetDefaultService"/> class with default validator.
         /// </summary>
-        /// <returns>Validator with default settings.</returns>
-        protected override IRecordValidator CreateValidator()
+        public FileCabinetDefaultService()
+            : base(new DefaultValidator())
         {
-            return new DefaultValidator();
         }
     }
 }

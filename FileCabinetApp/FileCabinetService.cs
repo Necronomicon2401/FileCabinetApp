@@ -12,6 +12,16 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
+        private readonly IRecordValidator validator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// </summary>
+        /// <param name="validator">Type of validator.</param>
+        protected FileCabinetService(IRecordValidator validator)
+        {
+            this.validator = validator;
+        }
 
         /// <summary>
         /// Creates record as FileCabinetRecord object and add it to all dictionaries.
@@ -20,7 +30,7 @@ namespace FileCabinetApp
         /// <returns>Return created record id.</returns>
         public int CreateRecord(FileCabinetRecord record)
         {
-            this.CreateValidator().ValidateParameters(record);
+            this.validator.ValidateParameters(record);
             record.Id = this.list.Count + 1;
             this.list.Add(record);
 
@@ -66,7 +76,7 @@ namespace FileCabinetApp
         /// <param name="record">Edited record.</param>
         public void EditRecord(FileCabinetRecord record)
         {
-            this.CreateValidator().ValidateParameters(record);
+            this.validator.ValidateParameters(record);
             for (int i = 0; i < this.list.Count; i++)
             {
                 if (this.list[i].Id == record.Id)
@@ -183,11 +193,5 @@ namespace FileCabinetApp
         {
             return this.list.Count;
         }
-
-        /// <summary>
-        /// Create validator with choosen settings.
-        /// </summary>
-        /// <returns>Validator with choosen settings.</returns>
-        protected abstract IRecordValidator CreateValidator();
     }
 }
