@@ -141,6 +141,12 @@
             </summary>
             <param name="args">Command line arguments.</param>
         </member>
+        <member name="M:FileCabinetApp.Program.UsingValidationRules(System.String[])">
+            <summary>
+            Specifying the type of validation rules.
+            </summary>
+            <param name="args">Command line arguments.</param>
+        </member>
         <member name="M:FileCabinetApp.Program.PrintMissedCommandInfo(System.String)">
             <summary>
             Prints information about not existing command writed by user.
