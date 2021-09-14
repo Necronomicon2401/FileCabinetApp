@@ -36,6 +36,30 @@ namespace FileCabinetApp
             new string[] { "find", "finds and shows created records by inputed property", "The 'find' command finds and shows created records by inputed property." },
         };
 
+        private static string typeOfValidation;
+
+        private static FileCabinetRecord defaultValidationRecord = new FileCabinetRecord
+        {
+            Id = 0,
+            FirstName = "Sam",
+            LastName = "Dif",
+            DateOfBirth = new DateTime(1950, 5, 5),
+            WorkExperience = 1,
+            Weight = 10,
+            LuckySymbol = '7',
+        };
+
+        private static FileCabinetRecord customValidationRecord = new FileCabinetRecord
+        {
+            Id = 0,
+            FirstName = "FirstName",
+            LastName = "LastName",
+            DateOfBirth = new DateTime(2000, 1, 1),
+            WorkExperience = 15,
+            Weight = 70,
+            LuckySymbol = 'S',
+        };
+
         private static IFileCabinetService fileCabinetServiceInterface;
 
         private static bool isRunning = true;
@@ -94,6 +118,7 @@ namespace FileCabinetApp
             {
                 fileCabinetServiceInterface = new FileCabinetService(new DefaultValidator());
                 Console.WriteLine("Using default validation rules.");
+                typeOfValidation = "default";
                 return;
             }
 
@@ -101,6 +126,7 @@ namespace FileCabinetApp
             {
                 fileCabinetServiceInterface = new FileCabinetService(new DefaultValidator());
                 Console.WriteLine("Using default validation rules.");
+                typeOfValidation = "default";
                 return;
             }
 
@@ -108,6 +134,7 @@ namespace FileCabinetApp
             {
                 fileCabinetServiceInterface = new FileCabinetService(new CustomValidator());
                 Console.WriteLine("Using custom validation rules.");
+                typeOfValidation = "custom";
                 return;
             }
 
@@ -117,6 +144,7 @@ namespace FileCabinetApp
                 {
                     fileCabinetServiceInterface = new FileCabinetService(new DefaultValidator());
                     Console.WriteLine("Using default validation rules.");
+                    typeOfValidation = "default";
                     return;
                 }
 
@@ -124,6 +152,7 @@ namespace FileCabinetApp
                 {
                     fileCabinetServiceInterface = new FileCabinetService(new CustomValidator());
                     Console.WriteLine("Using custom validation rules.");
+                    typeOfValidation = "custom";
                     return;
                 }
             }
@@ -190,60 +219,222 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Reads input and validate it.
+        /// </summary>
+        /// <param name="converter">Function for converter.</param>
+        /// <param name="validator">Function for validator.</param>
+        /// <returns>Input in nessecary type.</returns>
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
+        }
+
+        /// <summary>
+        /// Convert string.
+        /// </summary>
+        /// <param name="str">String to convert.</param>
+        /// <returns>Tuple that represent convert status and converted result.</returns>
+        private static Tuple<bool, string, string> StringConverter(string str)
+        {
+            return new Tuple<bool, string, string>(true, str, str);
+        }
+
+        /// <summary>
+        /// Convert DateTime.
+        /// </summary>
+        /// <param name="str">String to convert.</param>
+        /// <returns>Tuple that represent convert status and converted result.</returns>
+        private static Tuple<bool, string, DateTime> DateConverter(string str)
+        {
+            string datePattern = "MM/dd/yyyy";
+            var parsed = DateTime.TryParseExact(str, datePattern, null, 0, out DateTime dateOfBirth);
+            return new Tuple<bool, string, DateTime>(parsed, str, dateOfBirth);
+        }
+
+        /// <summary>
+        /// Convert short.
+        /// </summary>
+        /// <param name="str">String to convert.</param>
+        /// <returns>Tuple that represent convert status and converted result.</returns>
+        private static Tuple<bool, string, short> ShortConverter(string str)
+        {
+            var parsed = short.TryParse(str, out short sh);
+            return new Tuple<bool, string, short>(parsed, str, sh);
+        }
+
+        /// <summary>
+        /// Convert decimal.
+        /// </summary>
+        /// <param name="str">String to convert.</param>
+        /// <returns>Tuple that represent convert status and converted result.</returns>
+        private static Tuple<bool, string, decimal> DecimalConverter(string str)
+        {
+            var parsed = decimal.TryParse(str, out decimal dcm);
+            return new Tuple<bool, string, decimal>(parsed, str, dcm);
+        }
+
+        /// <summary>
+        /// Convert char.
+        /// </summary>
+        /// <param name="str">String to convert.</param>
+        /// <returns>Tuple that represent convert status and converted result.</returns>
+        private static Tuple<bool, string, char> CharConverter(string str)
+        {
+            var parsed = char.TryParse(str, out char ch);
+            return new Tuple<bool, string, char>(parsed, str, ch);
+        }
+
+        /// <summary>
+        /// First name validation.
+        /// </summary>
+        /// <param name="firstName">String to validate.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        private static Tuple<bool, string> FirstNameValidator(string firstName)
+        {
+            FileCabinetRecord record = defaultValidationRecord;
+
+            if (typeOfValidation.Equals("custom"))
+            {
+                record = customValidationRecord;
+            }
+
+            record.FirstName = firstName;
+            return fileCabinetServiceInterface.StartValidation(record);
+        }
+
+        /// <summary>
+        /// Last name validation.
+        /// </summary>
+        /// <param name="lastName">String to validate.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        private static Tuple<bool, string> LastNameValidator(string lastName)
+        {
+            FileCabinetRecord record = defaultValidationRecord;
+
+            if (typeOfValidation.Equals("custom"))
+            {
+                record = customValidationRecord;
+            }
+
+            record.LastName = lastName;
+            return fileCabinetServiceInterface.StartValidation(record);
+        }
+
+        /// <summary>
+        /// Date of birth validation.
+        /// </summary>
+        /// <param name="dateOfBirth">DateTime object to validate.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        private static Tuple<bool, string> DateOfBirthValidator(DateTime dateOfBirth)
+        {
+            FileCabinetRecord record = defaultValidationRecord;
+
+            if (typeOfValidation.Equals("custom"))
+            {
+                record = customValidationRecord;
+            }
+
+            record.DateOfBirth = dateOfBirth;
+            return fileCabinetServiceInterface.StartValidation(record);
+        }
+
+        /// <summary>
+        /// Work experience validation.
+        /// </summary>
+        /// <param name="workExperience">Short object to validate.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        private static Tuple<bool, string> WorkExperienceValidator(short workExperience)
+        {
+            FileCabinetRecord record = defaultValidationRecord;
+
+            if (typeOfValidation.Equals("custom"))
+            {
+                record = customValidationRecord;
+            }
+
+            record.WorkExperience = workExperience;
+            return fileCabinetServiceInterface.StartValidation(record);
+        }
+
+        /// <summary>
+        /// Weightvalidation.
+        /// </summary>
+        /// <param name="weight">Decimal object to validate.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        private static Tuple<bool, string> WeightValidator(decimal weight)
+        {
+            FileCabinetRecord record = defaultValidationRecord;
+
+            if (typeOfValidation.Equals("custom"))
+            {
+                record = customValidationRecord;
+            }
+
+            record.Weight = weight;
+            return fileCabinetServiceInterface.StartValidation(record);
+        }
+
+        /// <summary>
+        /// Lucky symbol validation.
+        /// </summary>
+        /// <param name="luckySymbol">Char object to validate.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        private static Tuple<bool, string> LuckySymbolValidator(char luckySymbol)
+        {
+            FileCabinetRecord record = defaultValidationRecord;
+
+            if (typeOfValidation.Equals("custom"))
+            {
+                record = customValidationRecord;
+            }
+
+            record.LuckySymbol = luckySymbol;
+            return fileCabinetServiceInterface.StartValidation(record);
+        }
+
+        /// <summary>
         /// Creates new record and save it as FileCabinetRecord object.
         /// </summary>
         /// <param name="parameters">String representation of writed command parameters.</param>
         private static void Create(string parameters)
         {
             FileCabinetRecord newRecord = new ();
-            string datePattern = "MM/dd/yyyy";
             Console.Write("First name: ");
-            newRecord.FirstName = Console.ReadLine();
+            newRecord.FirstName = ReadInput(StringConverter, FirstNameValidator);
             Console.Write("Last name: ");
-            newRecord.LastName = Console.ReadLine();
+            newRecord.LastName = ReadInput(StringConverter, LastNameValidator);
             Console.Write("Date of birth: ");
-            var parsed = DateTime.TryParseExact(Console.ReadLine(), datePattern, null, 0, out DateTime dateOfBirth);
-            while (!parsed)
-            {
-                Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
-                Console.Write("Date of birth: ");
-                parsed = DateTime.TryParseExact(Console.ReadLine(), datePattern, null, 0, out dateOfBirth);
-            }
-
-            newRecord.DateOfBirth = dateOfBirth;
-
+            newRecord.DateOfBirth = ReadInput(DateConverter, DateOfBirthValidator);
             Console.Write("Work experience: ");
-            parsed = short.TryParse(Console.ReadLine(), out short workExperience);
-            while (!parsed)
-            {
-                Console.WriteLine("Invalid work experience input type, try short type");
-                Console.Write("Work experience: ");
-                parsed = short.TryParse(Console.ReadLine(), out workExperience);
-            }
-
-            newRecord.WorkExperience = workExperience;
-
+            newRecord.WorkExperience = ReadInput(ShortConverter, WorkExperienceValidator);
             Console.Write("Weight: ");
-            parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
-            while (!parsed)
-            {
-                Console.WriteLine("Invalid weight input type, try decimal type");
-                Console.Write("Weight: ");
-                parsed = decimal.TryParse(Console.ReadLine(), out weight);
-            }
-
-            newRecord.Weight = weight;
-
+            newRecord.Weight = ReadInput(DecimalConverter, WeightValidator);
             Console.Write("Lucky symbol: ");
-            parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
-            while (!parsed)
-            {
-                Console.WriteLine("Invalid lucky symbol input, try to write one symbol");
-                Console.Write("Lucky symbol: ");
-                parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
-            }
-
-            newRecord.LuckySymbol = luckySymbol;
+            newRecord.LuckySymbol = ReadInput(CharConverter, LuckySymbolValidator);
 
             try
             {
@@ -287,54 +478,18 @@ namespace FileCabinetApp
             {
                 FileCabinetRecord updatedRecord = new ();
                 updatedRecord.Id = id;
-                string pattern = "MM/dd/yyyy";
                 Console.Write("First name: ");
-                updatedRecord.FirstName = Console.ReadLine();
+                updatedRecord.FirstName = ReadInput(StringConverter, FirstNameValidator);
                 Console.Write("Last name: ");
-                updatedRecord.LastName = Console.ReadLine();
+                updatedRecord.LastName = ReadInput(StringConverter, LastNameValidator);
                 Console.Write("Date of birth: ");
-                var parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out DateTime dateOfBirth);
-                while (!parsed)
-                {
-                    Console.WriteLine("Invalid date type, please, use MM/DD/YYYY pattern");
-                    Console.Write("Date of birth: ");
-                    parsed = DateTime.TryParseExact(Console.ReadLine(), pattern, null, 0, out dateOfBirth);
-                }
-
-                updatedRecord.DateOfBirth = dateOfBirth;
-
+                updatedRecord.DateOfBirth = ReadInput(DateConverter, DateOfBirthValidator);
                 Console.Write("Work experience: ");
-                parsed = short.TryParse(Console.ReadLine(), out short workExperience);
-                while (!parsed)
-                {
-                    Console.WriteLine("Invalid work experience input type, try short type");
-                    Console.Write("Work experience: ");
-                    parsed = short.TryParse(Console.ReadLine(), out workExperience);
-                }
-
-                updatedRecord.WorkExperience = workExperience;
-
+                updatedRecord.WorkExperience = ReadInput(ShortConverter, WorkExperienceValidator);
                 Console.Write("Weight: ");
-                parsed = decimal.TryParse(Console.ReadLine(), out decimal weight);
-                while (!parsed)
-                {
-                    Console.WriteLine("Invalid weight input type, try decimal type");
-                    Console.Write("Weight: ");
-                    parsed = decimal.TryParse(Console.ReadLine(), out weight);
-                }
-
-                updatedRecord.Weight = weight;
-
+                updatedRecord.Weight = ReadInput(DecimalConverter, WeightValidator);
                 Console.Write("Lucky symbol: ");
-                parsed = char.TryParse(Console.ReadLine(), out char luckySymbol);
-                while (!parsed)
-                {
-                    Console.WriteLine("Invalid lucky symbol input, try to write one symbol");
-                    Console.Write("Lucky symbol: ");
-                    parsed = char.TryParse(Console.ReadLine(), out luckySymbol);
-                }
-
-                updatedRecord.LuckySymbol = luckySymbol;
+                updatedRecord.LuckySymbol = ReadInput(CharConverter, LuckySymbolValidator);
 
                 try
                 {

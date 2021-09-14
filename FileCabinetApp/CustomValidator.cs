@@ -20,7 +20,7 @@ namespace FileCabinetApp
 
             if (record.FirstName.Length < 4 || record.FirstName.Length > 30)
             {
-                throw new ArgumentException("First name length must be greater then 5 and less then 31");
+                throw new ArgumentException("First name length must be greater then 3 and less then 31");
             }
 
             if (string.IsNullOrWhiteSpace(record.LastName))
@@ -30,7 +30,7 @@ namespace FileCabinetApp
 
             if (record.LastName.Length < 4 || record.LastName.Length > 30)
             {
-                throw new ArgumentException("Last name length must be greater then 5 and less then 31");
+                throw new ArgumentException("Last name length must be greater then 3 and less then 31");
             }
 
             if (record.DateOfBirth > new DateTime(2003, 1, 1) || record.DateOfBirth < new DateTime(1960, 2, 24))

@@ -84,6 +84,13 @@
             </summary>
             <param name="validator">Type of validator.</param>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetService.StartValidation(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates record according to current validator.
+            </summary>
+            <param name="record">Person record.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Creates record as FileCabinetRecord object and add it to all dictionaries.
@@ -134,6 +141,13 @@
             <summary>
             Interface for FileCabinetService.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.StartValidation(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates record according to current validator.
+            </summary>
+            <param name="record">Person record.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
@@ -232,6 +246,91 @@
             Prints the number of records that the service stores.
             </summary>
             <param name="parameters">String representation of writed command parameters.</param>
+        </member>
+        <member name="M:FileCabinetApp.Program.ReadInput``1(System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
+            <summary>
+            Reads input and validate it.
+            </summary>
+            <param name="converter">Function for converter.</param>
+            <param name="validator">Function for validator.</param>
+            <returns>Input in nessecary type.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.StringConverter(System.String)">
+            <summary>
+            Convert string.
+            </summary>
+            <param name="str">String to convert.</param>
+            <returns>Tuple that represent convert status and converted result.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.DateConverter(System.String)">
+            <summary>
+            Convert DateTime.
+            </summary>
+            <param name="str">String to convert.</param>
+            <returns>Tuple that represent convert status and converted result.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.ShortConverter(System.String)">
+            <summary>
+            Convert short.
+            </summary>
+            <param name="str">String to convert.</param>
+            <returns>Tuple that represent convert status and converted result.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.DecimalConverter(System.String)">
+            <summary>
+            Convert decimal.
+            </summary>
+            <param name="str">String to convert.</param>
+            <returns>Tuple that represent convert status and converted result.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.CharConverter(System.String)">
+            <summary>
+            Convert char.
+            </summary>
+            <param name="str">String to convert.</param>
+            <returns>Tuple that represent convert status and converted result.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.FirstNameValidator(System.String)">
+            <summary>
+            First name validation.
+            </summary>
+            <param name="firstName">String to validate.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.LastNameValidator(System.String)">
+            <summary>
+            Last name validation.
+            </summary>
+            <param name="lastName">String to validate.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            Date of birth validation.
+            </summary>
+            <param name="dateOfBirth">DateTime object to validate.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.WorkExperienceValidator(System.Int16)">
+            <summary>
+            Work experience validation.
+            </summary>
+            <param name="workExperience">Short object to validate.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.WeightValidator(System.Decimal)">
+            <summary>
+            Weightvalidation.
+            </summary>
+            <param name="weight">Decimal object to validate.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Program.LuckySymbolValidator(System.Char)">
+            <summary>
+            Lucky symbol validation.
+            </summary>
+            <param name="luckySymbol">Char object to validate.</param>
+            <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
         </member>
         <member name="M:FileCabinetApp.Program.Create(System.String)">
             <summary>

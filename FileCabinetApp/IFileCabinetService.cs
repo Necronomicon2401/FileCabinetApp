@@ -9,6 +9,13 @@ namespace FileCabinetApp
     public interface IFileCabinetService
     {
         /// <summary>
+        /// Validates record according to current validator.
+        /// </summary>
+        /// <param name="record">Person record.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        public Tuple<bool, string> StartValidation(FileCabinetRecord record);
+
+        /// <summary>
         /// Creates record as FileCabinetRecord object and add it to all dictionaries.
         /// </summary>
         /// <param name="record">Person record.</param>

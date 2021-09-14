@@ -25,6 +25,28 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Validates record according to current validator.
+        /// </summary>
+        /// <param name="record">Person record.</param>
+        /// <returns>Tuple with bool that represent validation status and string if exception catched.</returns>
+        public Tuple<bool, string> StartValidation(FileCabinetRecord record)
+        {
+            try
+            {
+                this.validator.ValidateParameters(record);
+                return new Tuple<bool, string>(true, string.Empty);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return new Tuple<bool, string>(false, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return new Tuple<bool, string>(false, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Creates record as FileCabinetRecord object and add it to all dictionaries.
         /// </summary>
         /// <param name="record">Person record.</param>
