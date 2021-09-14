@@ -7,7 +7,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Application service class.
     /// </summary>
-    public class FileCabinetService
+    public class FileCabinetService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
@@ -130,7 +130,7 @@ namespace FileCabinetApp
         /// Finds records according to first name.
         /// </summary>
         /// <param name="firstName">First name to search for.</param>
-        /// <returns>Array of records.</returns>
+        /// <returns>ReadOnlyColletion of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (!this.firstNameDictionary.ContainsKey(firstName))
@@ -147,7 +147,7 @@ namespace FileCabinetApp
         /// Finds records according to last name.
         /// </summary>
         /// <param name="lastName">Last name to search for.</param>
-        /// <returns>Array of records.</returns>
+        /// <returns>ReadOnlyColletion of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (!this.lastNameDictionary.ContainsKey(lastName))
@@ -164,7 +164,7 @@ namespace FileCabinetApp
         /// Finds records according to date of birth.
         /// </summary>
         /// <param name="dateOfBirth">Date of birth to search for.</param>
-        /// <returns>Array of records.</returns>
+        /// <returns>ReadOnlyColletion of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             if (!this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
@@ -180,7 +180,7 @@ namespace FileCabinetApp
         /// <summary>
         /// Gets all records.
         /// </summary>
-        /// <returns>Array of all records.</returns>
+        /// <returns>ReadOnlyColletion of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             return new ReadOnlyCollection<FileCabinetRecord>(this.list);
