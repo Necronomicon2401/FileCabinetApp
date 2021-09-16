@@ -9,6 +9,12 @@ namespace FileCabinetApp
     public interface IFileCabinetService
     {
         /// <summary>
+        /// Make a snapshot of current FileCabinetService.
+        /// </summary>
+        /// <returns>FileCabinetService snapshot object.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot();
+
+        /// <summary>
         /// Validates record according to current validator.
         /// </summary>
         /// <param name="record">Person record.</param>

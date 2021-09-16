@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 
 namespace FileCabinetApp
 {
@@ -23,6 +24,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("export", Export),
         };
 
         private static readonly string[][] HelpMessages = new string[][]
@@ -34,6 +36,7 @@ namespace FileCabinetApp
             new string[] { "list", "shows list of records", "The 'list' command shows list of records." },
             new string[] { "edit", "edits created record by id", "The 'edit' command allows to edit created record by id." },
             new string[] { "find", "finds and shows created records by inputed property", "The 'find' command finds and shows created records by inputed property." },
+            new string[] { "export", "exports current records to csv or xml file", "The 'export' command exports current records to csv or xml file." },
         };
 
         private static string typeOfValidation;
@@ -604,6 +607,81 @@ namespace FileCabinetApp
                 {
                     Console.WriteLine($"#{list[i].Id}, {list[i].FirstName}, {list[i].LastName}, {list[i].DateOfBirth.ToString("yyyy'-'MMM'-'dd", ci)}, Work experience: {list[i].WorkExperience}, Weight: {list[i].Weight}, Lucky symbol: {list[i].LuckySymbol}");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Export all existing records.
+        /// </summary>
+        /// <param name="parameters">String representation of writed command parameters.</param>
+        private static void Export(string parameters)
+        {
+            if (fileCabinetServiceInterface.GetRecords().Count == 0)
+            {
+                Console.WriteLine("List of records is empty, please use 'create' command to create record");
+            }
+
+            var inputs = parameters.Split(' ', 2);
+            if (inputs.Length != 2)
+            {
+                Console.WriteLine("Please input property of export  like \"export csv filename.csv \" ");
+                return;
+            }
+
+            string exportType = inputs[0];
+            string fileName = inputs[1];
+
+            try
+            {
+                FileStream fileStream = new (fileName, FileMode.Open);
+                fileStream.Close();
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine($"Export failed: can't open file {fileName}");
+                return;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"Export failed: can't access to the file {fileName}");
+                return;
+            }
+            catch (FileNotFoundException)
+            {
+                FileStream fileStream = new (fileName, FileMode.Create);
+                fileStream.Close();
+                StreamWriter writer = new (fileName);
+                writer.AutoFlush = true;
+                FileCabinetServiceSnapshot snapshot = fileCabinetServiceInterface.MakeSnapshot();
+                if (exportType == "csv")
+                {
+                    snapshot.SaveToCsv(writer);
+                    Console.WriteLine($"All records are exported to file {fileName}");
+                }
+
+                writer.Close();
+                return;
+            }
+
+            Console.Write($"File is exist - rewrite {fileName}? [Y/n] ");
+            var input = Console.ReadLine();
+            if (input.ToLower().Equals("y"))
+            {
+                StreamWriter writer = new (fileName);
+                writer.AutoFlush = true;
+                FileCabinetServiceSnapshot snapshot = fileCabinetServiceInterface.MakeSnapshot();
+                if (exportType == "csv")
+                {
+                    snapshot.SaveToCsv(writer);
+                    Console.WriteLine($"All records are exported to file {fileName}");
+                }
+
+                writer.Close();
+            }
+
+            if (input.ToLower().Equals("n"))
+            {
+                return;
             }
         }
     }

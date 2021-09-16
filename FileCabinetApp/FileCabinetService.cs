@@ -25,6 +25,15 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Make a snapshot of current FileCabinetService.
+        /// </summary>
+        /// <returns>FileCabinetService snapshot object.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            return new FileCabinetServiceSnapshot(this.list);
+        }
+
+        /// <summary>
         /// Validates record according to current validator.
         /// </summary>
         /// <param name="record">Person record.</param>
