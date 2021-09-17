@@ -73,6 +73,40 @@
             </summary>
             <value>Property <c>LuckySymbol</c> represents the lucky symbol of person in record.</value>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
+            <summary>
+            CSV writer class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.#ctor(System.IO.TextWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvWriter"/> class.
+            </summary>
+            <param name="writer">Writer to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Write the record by using current writer.
+            </summary>
+            <param name="record">Record for writing.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>
+            XML writer class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="writer">Writer to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            Write the records by using current writer.
+            </summary>
+            <param name="records">Records for writing.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
             Application service class.
@@ -83,6 +117,12 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.
             </summary>
             <param name="validator">Type of validator.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.MakeSnapshot">
+            <summary>
+            Make a snapshot of current FileCabinetService.
+            </summary>
+            <returns>FileCabinetService snapshot object.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.StartValidation(FileCabinetApp.FileCabinetRecord)">
             <summary>
@@ -137,10 +177,39 @@
             </summary>
             <returns>Count of all records.</returns>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
+            <summary>
+            Class for FileCabinetService snapshots.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor(System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.
+            </summary>
+            <param name="list">List of records.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
+            <summary>
+            Creates CSV record.
+            </summary>
+            <param name="streamWriter">Stream writer to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
+            <summary>
+            Creates XML record.
+            </summary>
+            <param name="streamWriter">Stream writer to use.</param>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             Interface for FileCabinetService.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+            <summary>
+            Make a snapshot of current FileCabinetService.
+            </summary>
+            <returns>FileCabinetService snapshot object.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.StartValidation(FileCabinetApp.FileCabinetRecord)">
             <summary>
@@ -353,6 +422,12 @@
         <member name="M:FileCabinetApp.Program.List(System.String)">
             <summary>
             Prints all existing records.
+            </summary>
+            <param name="parameters">String representation of writed command parameters.</param>
+        </member>
+        <member name="M:FileCabinetApp.Program.Export(System.String)">
+            <summary>
+            Export all existing records.
             </summary>
             <param name="parameters">String representation of writed command parameters.</param>
         </member>
