@@ -659,6 +659,12 @@ namespace FileCabinetApp
                     Console.WriteLine($"All records are exported to file {fileName}");
                 }
 
+                if (exportType.Equals("xml"))
+                {
+                    snapshot.SaveToXml(writer);
+                    Console.WriteLine($"All records are exported to file {fileName}");
+                }
+
                 writer.Close();
                 return;
             }
@@ -673,6 +679,12 @@ namespace FileCabinetApp
                 if (exportType == "csv")
                 {
                     snapshot.SaveToCsv(writer);
+                    Console.WriteLine($"All records are exported to file {fileName}");
+                }
+
+                if (exportType.Equals("xml"))
+                {
+                    snapshot.SaveToXml(writer);
                     Console.WriteLine($"All records are exported to file {fileName}");
                 }
 

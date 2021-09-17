@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 
 namespace FileCabinetApp
 {
@@ -32,6 +33,22 @@ namespace FileCabinetApp
             {
                 fileCabinetRecordCsvWriter.Write(record);
             }
+        }
+
+        /// <summary>
+        /// Creates XML record.
+        /// </summary>
+        /// <param name="streamWriter">Stream writer to use.</param>
+        public void SaveToXml(StreamWriter streamWriter)
+        {
+            XmlWriterSettings settings = new ();
+            settings.ConformanceLevel = ConformanceLevel.Auto;
+            settings.Indent = true;
+            settings.NewLineOnAttributes = true;
+            XmlWriter writer = XmlWriter.Create(streamWriter, settings);
+            FileCabinetRecordXmlWriter fileCabinetRecordXmlWriter = new (writer);
+            fileCabinetRecordXmlWriter.Write(this.records);
+            writer.Close();
         }
     }
 }

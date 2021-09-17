@@ -90,6 +90,23 @@
             </summary>
             <param name="record">Record for writing.</param>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>
+            XML writer class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="writer">Writer to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            Write the records by using current writer.
+            </summary>
+            <param name="records">Records for writing.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
             Application service class.
@@ -174,6 +191,12 @@
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
             Creates CSV record.
+            </summary>
+            <param name="streamWriter">Stream writer to use.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
+            <summary>
+            Creates XML record.
             </summary>
             <param name="streamWriter">Stream writer to use.</param>
         </member>
